@@ -29,3 +29,30 @@ async function fetchMessages() {
 //     authorLine.textContent = "";
 //   }
 // }
+
+form.addEventListener("submit", async (e) => {
+  e.preventDefault();
+  const author = authorInput.value.trim();
+  const text = textInput.value.trim();
+
+  try {
+    const response = await fetch(backendUrl, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({author, text}),
+    });
+
+  if (!response.ok) throw new Error("Failed to submit Message");
+
+    formMessage.textContent = "Msg sent successfully!";
+  
+    textInput.value = "";
+
+  } catch (err) {
+    formMessage.textContent = "Error submitting Message.";
+    console.error(err);
+  }
+});
+
+loadMessages();
+
