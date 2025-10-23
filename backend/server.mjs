@@ -29,8 +29,8 @@ app.post("/messages", (req, res) => {
 });
 
 
-// app.listen(port, () => {
-//   console.error(`Quote server listening on port ${port}`);
-// });
+app.listen(port, () => {
+  console.error(`Chat server listening on port ${port}`);
+});
 
 let messages = []
