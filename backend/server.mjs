@@ -23,6 +23,7 @@ app.post("/messages", (req, res) => {
     id: messages.length + 1,
     text: text.trim(),
     author: author.trim(),
+    timestamp: new Date() 
   };
 
     messages.push(newMessage);
