@@ -7,9 +7,10 @@ const port = 3000;
 app.use(express.json());
 app.use(cors({
   origin: "https://rihannap-chatapp-frontend.hosting.codeyourfuture.io",
-  methods: ["GET", "POST"],
+  methods: ["GET", "POST", "OPTIONS"],
   allowedHeaders: ["Content-Type"]
 }));
+app.options("*", cors());
 let messages = []
 
 app.get("/messages", (req, res) => {
