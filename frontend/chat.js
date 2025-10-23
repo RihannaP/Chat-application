@@ -5,10 +5,9 @@ const textInput = document.querySelector("#text");
 const formMessage = document.querySelector("#form-message");
 
 
-const backendUrl = window.location.hostname === "127.0.0.1" || window.location.hostname === "localhost"
-  ? "http://127.0.0.1:3000/messages"
-  : "https://rihannap-chatapp-backend.hosting.codeyourfuture.io/messages";
-  
+const backendUrl = "https://rihannap-chatapp-backend.hosting.codeyourfuture.io/messages";
+
+
 async function fetchMessages() {
   const response = await fetch(backendUrl);
   const messages = await response.json();

@@ -5,12 +5,23 @@ import cors from "cors";
 const app = express();
 const port = 3000;
 app.use(express.json());
+
+const allowedOrigins = [
+  "http://127.0.0.1:3000",
+  "http://localhost:3000",
+  "https://rihannap-chatapp-frontend.hosting.codeyourfuture.io"
+];
+
 app.use(cors({
-  origin: [
-    "http://127.0.0.1:3000",
-    "http://localhost:3000",
-    "https://rihannap-chatapp-frontend.hosting.codeyourfuture.io"
-  ],
+  origin: function(origin, callback){
+    // allow requests with no origin (like curl, Postman)
+    if(!origin) return callback(null, true);
+    if(allowedOrigins.indexOf(origin) === -1){
+      const msg = `CORS policy does not allow access from ${origin}`;
+      return callback(new Error(msg), false);
+    }
+    return callback(null, true);
+  },
   methods: ["GET", "POST", "OPTIONS"],
   allowedHeaders: ["Content-Type"]
 }));
