@@ -2,6 +2,8 @@ const chatBox = document.querySelector("#chat-box");
 const form = document.querySelector("#message-form");
 const authorInput = document.querySelector("#author");
 const textInput = document.querySelector("#text");
+const formMessage = document.querySelector("#form-message");
+
 
 const backendUrl = "http://127.0.0.1:3000/messages";
 
@@ -34,6 +36,8 @@ form.addEventListener("submit", async (e) => {
     formMessage.textContent = "Msg sent successfully!";
   
     textInput.value = "";
+    authorInput.value = "";
+    fetchMessages();
 
   } catch (err) {
     formMessage.textContent = "Error submitting Message.";
@@ -41,5 +45,4 @@ form.addEventListener("submit", async (e) => {
   }
 });
 
-fetchMessages();
 
