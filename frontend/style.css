@@ -77,6 +77,16 @@ input, textarea {
     padding-bottom: 100px;
 }
 
+#chat-box{
+  background-color: #faeefb;
+  width: 90%;
+  max-width: 600px;
+  padding: 10px;
+  margin-bottom: 10px;
+  border: 2px solid #2f6931;
+  border-radius: 5px;
+}
+
 /* Form message */
 #form-message {
   color: #d32f2f; /* red for errors */
