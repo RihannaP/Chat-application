@@ -1,44 +1,46 @@
-💬 Chat Application
+# 💬 Chat Application  
 
-A simple chat app where users can send and view messages in real time.
+A simple chat app where users can send and view messages in real time.  
 
-🚀 Live Demo
+---
 
-🔗 Open the Live App
+## 🚀 Live Demo  
 
-🖥️ Backend API
+🔗 **[Open the Live App](https://rihannap-chatapp-frontend.hosting.codeyourfuture.io)**  
+🖥️ **[Backend API](https://rihannap-chatapp-backend.hosting.codeyourfuture.io)**  
 
-📂 Project Structure
+---
+
+## 📂 Project Structure  
 Chat-Application/
 ├── backend/
-│   ├── server.js
-│   └── package.json
+│ ├── server.js
+│ └── package.json
 └── frontend/
-    ├── index.html
-    ├── chat.js
-    └── style.css
+├── index.html
+├── chat.js
+└── style.css
 
-✨ Features
 
-📝 Send and display chat messages
+---
 
-🔄 Auto-refresh to show new messages from all users
+## ✨ Features  
+- 📝 Send and display chat messages  
+- 🔄 Auto-refresh to show new messages from all users  
 
-🧰 Technologies
+---
 
-Backend: Node.js, Express, CORS
-Frontend: HTML, CSS, JavaScript
+## 🧰 Technologies  
+**Backend:** Node.js, Express, CORS  
+**Frontend:** HTML, CSS, JavaScript  
 
-📡 API Endpoints
+---
 
-GET /messages → Returns all chat messages
-POST /messages → Adds a new message
-
+## 📡 API Endpoints  
+**GET** `/messages` → Returns all chat messages  
+**POST** `/messages` → Adds a new message  
+```json
 {
   "author": "Your name",
   "text": "Your message"
 }
-
-🧩 Credits
-
-Created as part of the CodeYourFuture training program.
