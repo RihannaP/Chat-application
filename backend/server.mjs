@@ -5,16 +5,16 @@ import cors from "cors";
 const app = express();
 const port = 3000;
 app.use(cors());
-
+let messages = []
 
 app.get("/messages", (req, res) => {
-  res.send(messages);
+  res.json(messages);
 });
 
 app.post("/messages", (req, res) => {
   const { text, author } = req.body;
-  if (!text?.trim() || !author?.trim()) {
-    res.status(400).send("Message text and author are required.");
+  if (!text || !author) {
+    return res.status(400).json("Message text and author are required.");
   return;
     }
 
@@ -24,8 +24,8 @@ app.post("/messages", (req, res) => {
     author: author.trim(),
   };
 
-  messages.push(message);
-  res.json(message);
+    messages.push(newMessage);
+    res.status(201).json(newMessage);
 });
 
 
@@ -33,4 +33,3 @@ app.listen(port, () => {
   console.error(`Chat server listening on port ${port}`);
 });
 
-let messages = []
