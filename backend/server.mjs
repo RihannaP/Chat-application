@@ -13,17 +13,7 @@ const allowedOrigins = [
 ];
 
 app.use(cors({
-  origin: function(origin, callback){
-    // allow requests with no origin (like curl, Postman)
-    if(!origin) return callback(null, true);
-    if(allowedOrigins.indexOf(origin) === -1){
-      const msg = `CORS policy does not allow access from ${origin}`;
-      return callback(new Error(msg), false);
-    }
-    return callback(null, true);
-  },
-  methods: ["GET", "POST", "OPTIONS"],
-  allowedHeaders: ["Content-Type"]
+  origin: "https://rihannap-chatapp-frontend.hosting.codeyourfuture.io"
 }));
 
 let messages = []
@@ -36,7 +26,6 @@ app.post("/messages", (req, res) => {
   const { text, author } = req.body;
   if (!text || !author) {
     return res.status(400).json("Message text and author are required.");
-  return;
     }
 
     const newMessage = {
