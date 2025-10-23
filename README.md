@@ -10,6 +10,7 @@ Backend: https://rihannap-chatapp-backend.hosting.codeyourfuture.io/
 
 
 📂 Project Structure
+
 Chat-Application/
 ├── backend/
 │   ├── server.js
