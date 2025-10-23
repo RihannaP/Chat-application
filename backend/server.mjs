@@ -5,7 +5,15 @@ import cors from "cors";
 const app = express();
 const port = 3000;
 app.use(express.json());
-app.use(cors());
+app.use(cors({
+  origin: [
+    "http://127.0.0.1:3000",
+    "http://localhost:3000",
+    "https://rihannap-chatapp-frontend.hosting.codeyourfuture.io"
+  ],
+  methods: ["GET", "POST", "OPTIONS"],
+  allowedHeaders: ["Content-Type"]
+}));
 
 let messages = []
 
