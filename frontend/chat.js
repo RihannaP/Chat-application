@@ -3,11 +3,11 @@ const form = document.querySelector("#message-form");
 const authorInput = document.querySelector("#author");
 const textInput = document.querySelector("#text");
 
-const backendUrl = "http://127.0.0.1:3000/";
+const backendUrl = "http://127.0.0.1:3000/messages";
 
 async function fetchMessages() {
-  const res = await fetch(backendUrl);
-  const messages = await response.text();
+  const response = await fetch(backendUrl);
+  const messages = await response.json();
 
   chatBox.textContent = ""; 
   messages.forEach(msg => {
