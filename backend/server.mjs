@@ -4,6 +4,7 @@ import cors from "cors";
 
 const app = express();
 const port = 3000;
+app.use(express.json());
 app.use(cors());
 let messages = []
 
@@ -18,7 +19,7 @@ app.post("/messages", (req, res) => {
   return;
     }
 
-    const message = {
+    const newMessage = {
     id: messages.length + 1,
     text: text.trim(),
     author: author.trim(),
