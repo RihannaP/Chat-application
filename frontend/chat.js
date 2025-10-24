@@ -16,7 +16,8 @@ const state = {
 
 function formatTime(isoString) {
   const date = new Date(isoString);
-  return date.toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" });
+  return date.toLocaleTimeString([], { day: "2-digit",
+    month: "short",year: "numeric",hour: "2-digit", minute: "2-digit" });
 }
 
 async function fetchMessages() {
