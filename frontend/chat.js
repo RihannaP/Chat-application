@@ -59,4 +59,4 @@ form.addEventListener("submit", async (e) => {
   }
 });
 
-fetchMessages();
+setInterval(fetchMessages, 1000);
