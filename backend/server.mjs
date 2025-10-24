@@ -6,12 +6,18 @@ const app = express();
 const port = 3000;
 app.use(express.json());
 
-// CORS configuration for your deployed frontend
 app.use(cors()); 
 
 let messages = []
 
-app.get("/messages", (req, res) => res.json(messages));
+app.get("/messages", (req, res) => {
+  const since = req.query.since; // since=2025-10-24T12:00:00.000Z
+  if (since) {
+    const newMessages = messages.filter(msg => new Date(msg.timestamp) > new Date(since));
+    return res.json(newMessages);
+  }  
+  res.json(messages)}); //return all messages if no since
+
 app.post("/messages", (req, res) => {
   const { text, author } = req.body;
   if (!text || !author) return res.status(400).json("Message text and author are required.");
