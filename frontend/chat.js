@@ -34,6 +34,8 @@ async function fetchMessages() {
       state.messages.forEach(msg => {
       const time = formatTime(msg.timestamp);
       const div = document.createElement("div");
+      div.classList.add("message"); // <-- Add this class!
+
       const authorDiv = document.createElement("div");
       authorDiv.classList.add("author");
       authorDiv.textContent = msg.author;
@@ -44,7 +46,7 @@ async function fetchMessages() {
 
       const timeDiv = document.createElement("div");
       timeDiv.classList.add("time");
-      timeDiv.textContent = new Date(msg.timestamp).toLocaleTimeString();
+      timeDiv.textContent = formatTime(msg.timestamp);
 
       div.appendChild(authorDiv);
       div.appendChild(textDiv);

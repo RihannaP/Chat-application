@@ -78,48 +78,45 @@ input, textarea {
 }
 
 #chat-box{
-  background-color: #faeefb;
   width: 90%;
   max-width: 600px;
   padding: 10px;
   margin-bottom: 10px;
-  border: 2px solid #2f6931;
-  border-radius: 5px;
 }
 
 /* Form message */
 #form-message {
   color: #d32f2f; /* red for errors */
   margin-bottom: 10px;
-  font-weight: bold;
+  font-weight: bold;  
 }
 
 /* Each message box */
 .message {
-  background-color: #e8f5e9; /* light green bubble */
-  border: 1px solid #4caf50;
+  background-color: #d1ecf8; /* light green bubble */
+  border: 2px solid #4c93af;
   border-radius: 8px;
   padding: 10px 15px;
   margin-bottom: 10px;
-  max-width: 80%;
 }
 
 /* Author */
 .message .author {
   font-weight: bold;
-  color: #1b5e20;
+  color: #1b2d5e;
   margin-bottom: 5px;
 }
 
 /* Message text */
 .message .text {
   margin-bottom: 5px;
-  color: #2e7d32;
+  color: #4d0642;
+
 }
 
 /* Timestamp */
 .message .time {
-  font-size: 0.8rem;
-  color: #555;
+  font-size: 0.9rem;
+  color: #4c4a4a;
   text-align: right;
 }
