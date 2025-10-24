@@ -7,15 +7,7 @@ const port = 3000;
 app.use(express.json());
 
 // CORS configuration for your deployed frontend
-app.use(cors({
-  origin: [
-    "http://127.0.0.1:3000",
-    "http://localhost:3000",
-    "https://rihannap-chatapp-frontend.hosting.codeyourfuture.io"
-  ],
-  methods: ["GET", "POST", "OPTIONS"],
-  allowedHeaders: ["Content-Type"]
-}));
+app.use(cors()); 
 
 let messages = []
 
