@@ -21,6 +21,9 @@ async function fetchMessages() {
     const response = await fetch(`${backendUrl}${query}`);
     const messages = await response.json();
 
+    if (Array.isArray(messages) && messages.length > 0) {
+      state.messages.push(...messages);
+
     chatBox.textContent = ""; 
     messages.forEach(msg => {
       const div = document.createElement("div");
