@@ -7,7 +7,7 @@ A simple chat app where users can send and view messages in real time.
 ## 🚀 Live Demo  
 
 🔗 **[Open the Live App](https://rihannap-chatapp-frontend.hosting.codeyourfuture.io)**  
-🖥️ **[Backend API](https://rihannap-chatapp-backend.hosting.codeyourfuture.io)**  
+🖥️ **[Backend API](https://rihannap-chatapp-backend.hosting.codeyourfuture.io/messages)**  
 
 ---
 
