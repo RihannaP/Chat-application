@@ -58,6 +58,8 @@ async function fetchMessages() {
   }
   } catch (err) {
     console.error("Failed to fetch messages:", err);
+  }finally{
+    fetchMessages();
   }
 }
 
@@ -79,15 +81,12 @@ form.addEventListener("submit", async (e) => {
     formMessage.textContent = "Message sent successfully!";
     textInput.value = "";
     authorInput.value = "";
-
-    await fetchMessages(); // refresh messages
-
+    
   } catch (err) {
     formMessage.textContent = "Error submitting message.";
     console.error(err);
   }
 });
 
-setInterval(fetchMessages, 1000);
 fetchMessages();
 

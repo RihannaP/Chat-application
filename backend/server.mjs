@@ -10,13 +10,22 @@ app.use(cors());
 
 let messages = []
 
+const callbacksForNewMessages = []
+
 app.get("/messages", (req, res) => {
   const since = req.query.since; // since=2025-10-24T12:00:00.000Z
-  if (since) {
-    const newMessages = messages.filter(msg => new Date(msg.timestamp) > new Date(since));
-    return res.json(newMessages);
-  }  
-  res.json(messages)}); //return all messages if no since
+  const newMessages = since ? messages.filter(msg => new Date(msg.timestamp) > new Date(since)) : messages;
+  
+  if (newMessages.length > 0){
+      return res.json(newMessages)
+  };
+  
+  callbacksForNewMessages.push((messagesToSend) => res.json(messagesToSend));
+
+});
+
+
+  
 
 app.post("/messages", (req, res) => {
   const { text, author } = req.body;
@@ -30,6 +39,11 @@ app.post("/messages", (req, res) => {
   };
 
   messages.push(newMessage);
+
+  while (callbacksForNewMessages.length > 0) {
+    const callback = callbacksForNewMessages.pop();
+    callback([newMessage]); // always send as array
+  }
   res.status(201).json(newMessage);
 });
 
