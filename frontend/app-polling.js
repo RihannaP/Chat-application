@@ -1,96 +1,101 @@
-// const chatBox = document.querySelector("#chat-box-polling");
-// const form = document.querySelector("#message-form-polling");
-// const authorInput = document.querySelector("#author-polling");
-// const textInput = document.querySelector("#text-polling");
-// const formMessage = document.querySelector("#form-message-polling");
+const chatBox = document.querySelector("#chat-box-polling");
+const form = document.querySelector("#message-form-polling");
+const authorInput = document.querySelector("#author-polling");
+const textInput = document.querySelector("#text-polling");
+const formMessage = document.querySelector("#form-message-polling");
 
 
-// let backendUrl;
-// if (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1:300') {
-//     backendUrl = "http://127.0.0.1:3000/messages";
-//     console.log('Running in local mode. Using local backend.');
-// } else {
-//     backendUrl = "https://rihannap-chatapp-backend.hosting.codeyourfuture.io/messages";
-//     console.log('Running in deployed mode. Using live backend.');
-// }
+let backendUrl;
 
-// const state = {
-//   messages: []
-// };
-
-// function formatTime(isoString) {
-//   const date = new Date(isoString);
-//   return date.toLocaleTimeString([], { day: "2-digit",
-//     month: "short",year: "numeric",hour: "2-digit", minute: "2-digit" });
-// }
-
-// async function fetchMessages() {
-//   try {
-//     const lastMessageTime = state.messages.length > 0? state.messages[state.messages.length - 1].timestamp : null;
-//     const query = lastMessageTime ? `?since=${lastMessageTime}` : "";
-//     const response = await fetch(`${backendUrl}${query}`);
-//     const messages = await response.json();
-
-//     if (Array.isArray(messages) && messages.length > 0) {
-//       state.messages.push(...messages);
-
-//       chatBox.textContent = ""; 
-//       state.messages.forEach(msg => {
-//       const time = formatTime(msg.timestamp);
-//       const div = document.createElement("div");
-//       div.classList.add("message");
-
-//       const authorDiv = document.createElement("div");
-//       authorDiv.classList.add("author");
-//       authorDiv.textContent = msg.author;
-
-//       const textDiv = document.createElement("div");
-//       textDiv.classList.add("text");
-//       textDiv.textContent = msg.text;
-
-//       const timeDiv = document.createElement("div");
-//       timeDiv.classList.add("time");
-//       timeDiv.textContent = formatTime(msg.timestamp);
-
-//       div.appendChild(authorDiv);
-//       div.appendChild(textDiv);
-//       div.appendChild(timeDiv);
-//       chatBox.appendChild(div);
-//     });
-
-//       chatBox.scrollTop = chatBox.scrollHeight
-//   }
-//   } catch (err) {
-//     console.error("Failed to fetch messages:", err);
-//   }finally{
-//     fetchMessages();
-//   }
-// }
+if (
+  window.location.hostname === "localhost" ||
+  window.location.hostname === "127.0.0.1"
+) {
+  backendUrl = "http://127.0.0.1:3000/messages";
+  console.log("💻 Running in local mode. Using local backend.");
+} else {
+  backendUrl = "https://rihannap-chatapp-backend.hosting.codeyourfuture.io/messages";
+  console.log("☁️ Running in deployed mode. Using live backend.");
+}
 
 
-// form.addEventListener("submit", async (e) => {
-//   e.preventDefault();
-//   const author = authorInput.value.trim();
-//   const text = textInput.value.trim();
+const state = {
+  messages: []
+};
 
-//   try {
-//     const response = await fetch(backendUrl, {
-//       method: "POST",
-//       headers: { "Content-Type": "application/json" },
-//       body: JSON.stringify({ author, text }),
-//     });
+function formatTime(isoString) {
+  const date = new Date(isoString);
+  return date.toLocaleTimeString([], { day: "2-digit",
+    month: "short",year: "numeric",hour: "2-digit", minute: "2-digit" });
+}
 
-//     if (!response.ok) throw new Error("Failed to submit message");
+async function fetchMessages() {
+  try {
+    const lastMessageTime = state.messages.length > 0? state.messages[state.messages.length - 1].timestamp : null;
+    const query = lastMessageTime ? `?since=${lastMessageTime}` : "";
+    const response = await fetch(`${backendUrl}${query}`);
+    const messages = await response.json();
 
-//     formMessage.textContent = "Message sent successfully!";
-//     textInput.value = "";
-//     authorInput.value = "";
+    if (Array.isArray(messages) && messages.length > 0) {
+      state.messages.push(...messages);
 
-//   } catch (err) {
-//     formMessage.textContent = "Error submitting message.";
-//     console.error(err);
-//   }
-// });
+      chatBox.textContent = ""; 
+      state.messages.forEach(msg => {
+      const time = formatTime(msg.timestamp);
+      const div = document.createElement("div");
+      div.classList.add("message");
 
-// fetchMessages();
+      const authorDiv = document.createElement("div");
+      authorDiv.classList.add("author");
+      authorDiv.textContent = msg.author;
+
+      const textDiv = document.createElement("div");
+      textDiv.classList.add("text");
+      textDiv.textContent = msg.text;
+
+      const timeDiv = document.createElement("div");
+      timeDiv.classList.add("time");
+      timeDiv.textContent = formatTime(msg.timestamp);
+
+      div.appendChild(authorDiv);
+      div.appendChild(textDiv);
+      div.appendChild(timeDiv);
+      chatBox.appendChild(div);
+    });
+
+      chatBox.scrollTop = chatBox.scrollHeight
+  }
+  } catch (err) {
+    console.error("Failed to fetch messages:", err);
+  }finally{
+    fetchMessages();
+  }
+}
+
+
+form.addEventListener("submit", async (e) => {
+  e.preventDefault();
+  const author = authorInput.value.trim();
+  const text = textInput.value.trim();
+
+  try {
+    const response = await fetch(backendUrl, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ author, text }),
+    });
+
+    if (!response.ok) throw new Error("Failed to submit message");
+
+    formMessage.textContent = "Message sent successfully!";
+    textInput.value = "";
+    authorInput.value = "";
+
+  } catch (err) {
+    formMessage.textContent = "Error submitting message.";
+    console.error(err);
+  }
+});
+
+fetchMessages();
 
