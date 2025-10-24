@@ -9,6 +9,11 @@ const formMessage = document.querySelector("#form-message");
 // const backendUrl = "http://127.0.0.1:3000/messages";
 const backendUrl = "https://rihannap-chatapp-backend.hosting.codeyourfuture.io/messages";
 
+
+const state = {
+  messages: []
+};
+
 async function fetchMessages() {
   try {
     const response = await fetch(backendUrl);
