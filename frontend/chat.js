@@ -6,8 +6,8 @@ const textInput = document.querySelector("#text");
 const formMessage = document.querySelector("#form-message");
 
 
-// const backendUrl = "http://127.0.0.1:3000/messages";
-const backendUrl = "https://rihannap-chatapp-backend.hosting.codeyourfuture.io/messages";
+const backendUrl = "http://127.0.0.1:3000/messages";
+// const backendUrl = "https://rihannap-chatapp-backend.hosting.codeyourfuture.io/messages";
 
 
 const state = {
@@ -34,7 +34,21 @@ async function fetchMessages() {
       state.messages.forEach(msg => {
       const time = formatTime(msg.timestamp);
       const div = document.createElement("div");
-      div.textContent = `${msg.author}: ${msg.text} (${time})`;
+      const authorDiv = document.createElement("div");
+      authorDiv.classList.add("author");
+      authorDiv.textContent = msg.author;
+
+      const textDiv = document.createElement("div");
+      textDiv.classList.add("text");
+      textDiv.textContent = msg.text;
+
+      const timeDiv = document.createElement("div");
+      timeDiv.classList.add("time");
+      timeDiv.textContent = new Date(msg.timestamp).toLocaleTimeString();
+
+      div.appendChild(authorDiv);
+      div.appendChild(textDiv);
+      div.appendChild(timeDiv);
       chatBox.appendChild(div);
     });
 

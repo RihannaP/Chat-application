@@ -93,3 +93,33 @@ input, textarea {
   margin-bottom: 10px;
   font-weight: bold;
 }
+
+/* Each message box */
+.message {
+  background-color: #e8f5e9; /* light green bubble */
+  border: 1px solid #4caf50;
+  border-radius: 8px;
+  padding: 10px 15px;
+  margin-bottom: 10px;
+  max-width: 80%;
+}
+
+/* Author */
+.message .author {
+  font-weight: bold;
+  color: #1b5e20;
+  margin-bottom: 5px;
+}
+
+/* Message text */
+.message .text {
+  margin-bottom: 5px;
+  color: #2e7d32;
+}
+
+/* Timestamp */
+.message .time {
+  font-size: 0.8rem;
+  color: #555;
+  text-align: right;
+}
