@@ -6,8 +6,8 @@ const textInput = document.querySelector("#text");
 const formMessage = document.querySelector("#form-message");
 
 
-const backendUrl = "http://127.0.0.1:3000/messages";
-// const backendUrl = "https://rihannap-chatapp-backend.hosting.codeyourfuture.io/messages";
+// const backendUrl = "http://127.0.0.1:3000/messages";
+const backendUrl = "https://rihannap-chatapp-backend.hosting.codeyourfuture.io/messages";
 
 
 const state = {
@@ -81,7 +81,7 @@ form.addEventListener("submit", async (e) => {
     formMessage.textContent = "Message sent successfully!";
     textInput.value = "";
     authorInput.value = "";
-    
+
   } catch (err) {
     formMessage.textContent = "Error submitting message.";
     console.error(err);
