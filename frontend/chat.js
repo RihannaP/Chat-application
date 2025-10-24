@@ -16,7 +16,7 @@ const state = {
 
 async function fetchMessages() {
   try {
-    const lastMessageTime = state.messages.length > 0? state.messages[state.messages.length - 1] : null;
+    const lastMessageTime = state.messages.length > 0? state.messages[state.messages.length - 1].timestamp : null;
     const query = lastMessageTime ? `?since=${lastMessageTime}` : "";
     const response = await fetch(`${backendUrl}${query}`);
     const messages = await response.json();
@@ -59,4 +59,4 @@ form.addEventListener("submit", async (e) => {
   }
 });
 
-setInterval(fetchMessages, 1000);
+setInterval(fetchMessages, 100);
