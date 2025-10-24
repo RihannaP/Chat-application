@@ -14,6 +14,11 @@ const state = {
   messages: []
 };
 
+function formatTime(isoString) {
+  const date = new Date(isoString);
+  return date.toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" });
+}
+
 async function fetchMessages() {
   try {
     const lastMessageTime = state.messages.length > 0? state.messages[state.messages.length - 1].timestamp : null;
@@ -26,8 +31,9 @@ async function fetchMessages() {
 
       chatBox.textContent = ""; 
       state.messages.forEach(msg => {
+      const time = formatTime(msg.timestamp);
       const div = document.createElement("div");
-      div.textContent = `${msg.author}: ${msg.text} - ${msg.timestamp}`;
+      div.textContent = `${msg.author}: ${msg.text} (${time})`;
       chatBox.appendChild(div);
     });
 
