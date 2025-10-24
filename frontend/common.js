@@ -1,14 +1,18 @@
+const chatBox = document.querySelector("#chat-box-polling");
+const form = document.querySelector("#message-form-polling");
+const authorInput = document.querySelector("#author-polling");
+const textInput = document.querySelector("#text-polling");
+const formMessage = document.querySelector("#form-message-polling");
 
-const chatBox = document.querySelector("#chat-box");
-const form = document.querySelector("#message-form");
-const authorInput = document.querySelector("#author");
-const textInput = document.querySelector("#text");
-const formMessage = document.querySelector("#form-message");
 
-
-const backendUrl = "http://127.0.0.1:3000/messages";
-// const backendUrl = "https://rihannap-chatapp-backend.hosting.codeyourfuture.io/messages";
-
+let backendUrl;
+if (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1:300') {
+    backendUrl = "http://127.0.0.1:3000/messages";
+    console.log('Running in local mode. Using local backend.');
+} else {
+    backendUrl = "https://rihannap-chatapp-backend.hosting.codeyourfuture.io/messages";
+    console.log('Running in deployed mode. Using live backend.');
+}
 
 const state = {
   messages: []
@@ -34,7 +38,7 @@ async function fetchMessages() {
       state.messages.forEach(msg => {
       const time = formatTime(msg.timestamp);
       const div = document.createElement("div");
-      div.classList.add("message"); // <-- Add this class!
+      div.classList.add("message");
 
       const authorDiv = document.createElement("div");
       authorDiv.classList.add("author");
@@ -87,6 +91,4 @@ form.addEventListener("submit", async (e) => {
     console.error(err);
   }
 });
-
 fetchMessages();
-
