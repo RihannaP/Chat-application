@@ -6,8 +6,8 @@ const textInput = document.querySelector("#text");
 const formMessage = document.querySelector("#form-message");
 
 
-const backendUrl = "http://127.0.0.1:3000/messages";
-// const backendUrl = "https://rihannap-chatapp-backend.hosting.codeyourfuture.io/messages";
+// const backendUrl = "http://127.0.0.1:3000/messages";
+const backendUrl = "https://rihannap-chatapp-backend.hosting.codeyourfuture.io/messages";
 
 
 const state = {
@@ -17,7 +17,7 @@ const state = {
 async function fetchMessages() {
   try {
     const lastMessageTime = state.messages.length > 0? state.messages[state.messages.length - 1] : null;
-    const query = lastMessage ? `?since=${lastMessageTime}` : "";
+    const query = lastMessageTime ? `?since=${lastMessageTime}` : "";
     const response = await fetch(`${backendUrl}${query}`);
     const messages = await response.json();
 
