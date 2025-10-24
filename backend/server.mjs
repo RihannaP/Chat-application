@@ -1,6 +1,8 @@
 
 import express from "express";
 import cors from "cors";
+import { server as WebSocketServer } from "websocket";
+
 
 const app = express();
 const port = 3000;
@@ -19,7 +21,7 @@ app.get("/messages", (req, res) => {
   if (newMessages.length > 0){
       return res.json(newMessages)
   };
-  
+
   callbacksForNewMessages.push((messagesToSend) => res.json(messagesToSend));
 
 });

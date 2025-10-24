@@ -19,6 +19,7 @@
   "homepage": "https://github.com/RihannaP/Chat-application#readme",
   "dependencies": {
     "cors": "^2.8.5",
-    "express": "^5.1.0"
+    "express": "^5.1.0",
+    "websocket": "^1.0.35"
   }
 }
