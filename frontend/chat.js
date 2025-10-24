@@ -27,7 +27,7 @@ async function fetchMessages() {
       chatBox.textContent = ""; 
       state.messages.forEach(msg => {
       const div = document.createElement("div");
-      div.textContent = `${msg.author}: ${msg.text}`;
+      div.textContent = `${msg.author}: ${msg.text} - ${msg.timestamp}`;
       chatBox.appendChild(div);
     });
 
