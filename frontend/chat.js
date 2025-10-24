@@ -24,12 +24,15 @@ async function fetchMessages() {
     if (Array.isArray(messages) && messages.length > 0) {
       state.messages.push(...messages);
 
-    chatBox.textContent = ""; 
-    messages.forEach(msg => {
+      chatBox.textContent = ""; 
+      state.messages.forEach(msg => {
       const div = document.createElement("div");
       div.textContent = `${msg.author}: ${msg.text}`;
       chatBox.appendChild(div);
     });
+
+      chatBox.scrollTop = chatBox.scrollHeight
+  }
   } catch (err) {
     console.error("Failed to fetch messages:", err);
   }
@@ -54,7 +57,7 @@ form.addEventListener("submit", async (e) => {
     textInput.value = "";
     authorInput.value = "";
 
-    fetchMessages(); // refresh messages
+    await fetchMessages(); // refresh messages
 
   } catch (err) {
     formMessage.textContent = "Error submitting message.";
@@ -62,4 +65,6 @@ form.addEventListener("submit", async (e) => {
   }
 });
 
-setInterval(fetchMessages, 100);
+setInterval(fetchMessages, 1000);
+fetchMessages();
+
