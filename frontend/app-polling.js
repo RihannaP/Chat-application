@@ -5,7 +5,7 @@ const textInput = document.querySelector("#text-polling");
 const formMessage = document.querySelector("#form-message-polling");
 
 
-let backendUrl;
+export let backendUrl;
 
 if (
   window.location.hostname === "localhost" ||
@@ -23,10 +23,37 @@ const state = {
   messages: []
 };
 
-function formatTime(isoString) {
+export function formatTime(isoString) {
   const date = new Date(isoString);
   return date.toLocaleTimeString([], { day: "2-digit",
     month: "short",year: "numeric",hour: "2-digit", minute: "2-digit" });
+}
+
+export function renderMessages(chatBox, messages) {
+  chatBox.textContent = ""; // clear old
+  messages.forEach((msg) => {
+    const div = document.createElement("div");
+    div.classList.add("message");
+
+    const author = document.createElement("div");
+    author.classList.add("author");
+    author.textContent = msg.author;
+
+    const text = document.createElement("div");
+    text.classList.add("text");
+    text.textContent = msg.text;
+
+    const time = document.createElement("div");
+    time.classList.add("time");
+    time.textContent = formatTime(msg.timestamp);
+
+    div.appendChild(author);
+    div.appendChild(text);
+    div.appendChild(time);
+    chatBox.appendChild(div);
+  });
+
+  chatBox.scrollTop = chatBox.scrollHeight;
 }
 
 async function fetchMessages() {
@@ -38,37 +65,12 @@ async function fetchMessages() {
 
     if (Array.isArray(messages) && messages.length > 0) {
       state.messages.push(...messages);
-
-      chatBox.textContent = ""; 
-      state.messages.forEach(msg => {
-      const time = formatTime(msg.timestamp);
-      const div = document.createElement("div");
-      div.classList.add("message");
-
-      const authorDiv = document.createElement("div");
-      authorDiv.classList.add("author");
-      authorDiv.textContent = msg.author;
-
-      const textDiv = document.createElement("div");
-      textDiv.classList.add("text");
-      textDiv.textContent = msg.text;
-
-      const timeDiv = document.createElement("div");
-      timeDiv.classList.add("time");
-      timeDiv.textContent = formatTime(msg.timestamp);
-
-      div.appendChild(authorDiv);
-      div.appendChild(textDiv);
-      div.appendChild(timeDiv);
-      chatBox.appendChild(div);
-    });
-
-      chatBox.scrollTop = chatBox.scrollHeight
-  }
+      renderMessages(chatBox, state.messages);
+    }
   } catch (err) {
     console.error("Failed to fetch messages:", err);
   }finally{
-    fetchMessages();
+    setTimeout(fetchMessages, 0); 
   }
 }
 
