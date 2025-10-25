@@ -8,21 +8,22 @@ const textInput = document.querySelector("#text-polling");
 const formMessage = document.querySelector("#form-message-polling");
 
 
-async function fetchMessages() {
-  try {
-    const lastMessageTime = state.messages.length > 0? state.messages[state.messages.length - 1].timestamp : null;
-    const query = lastMessageTime ? `?since=${lastMessageTime}` : "";
-    const response = await fetch(`${backendUrl}${query}`);
-    const messages = await response.json();
+let lastMessageTime = null;
+let lastReactionTime = null;
 
-    mergeMessages(messages);
+async function fetchMessages() {
+  const query = `?sinceMessage=${lastMessageTime || ''}&sinceReaction=${lastReactionTime || ''}`;
+  const res = await fetch(`${backendUrl}${query}`);
+  const newMessages = await res.json();
+  
+  if (newMessages.length > 0) {
+    mergeMessages(newMessages);
     renderMessages(chatBox, state.messages, reactMessage);
-    
-  } catch (err) {
-    console.error("Failed to fetch messages:", err);
-  }finally{
-    setTimeout(fetchMessages, 2000); 
+    lastMessageTime = new Date(Math.max(...newMessages.map(m => new Date(m.timestamp))));
+    lastReactionTime = new Date(Math.max(...newMessages.map(m => new Date(m.reactionTimestamp))));
   }
+
+  setTimeout(fetchMessages, 1000);
 }
 
 async function reactMessage(messageId, type) {

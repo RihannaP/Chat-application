@@ -70,7 +70,7 @@ function renderMessages(chatBox, messages, reactMessage) {
 }
 
 function mergeMessages(newMessages) {
-  if (!Array.isArray(newMessages) || newMessages.length === 0) return;
+  if (!Array.isArray(newMessages)) return;
 
   newMessages.forEach((msg) => {
     const existingId = state.messages.findIndex((m) => m.id === msg.id);

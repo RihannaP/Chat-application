@@ -3,7 +3,6 @@ import express from "express";
 import cors from "cors";
 import http from "http"
 import {server as WebSocketServer } from "websocket";
-import { json } from "stream/consumers";
 
 
 const app = express();
@@ -18,12 +17,17 @@ const callbacksForNewMessages = []
 ///////////---- HTTP- Long polling ----///////////
 
 app.get("/messages", (req, res) => {
-  const since = req.query.since; // since=2025-10-24T12:00:00.000Z
-  const newMessages = since ? messages.filter(msg => new Date(msg.timestamp) > new Date(since)) : messages;
-  
-  if (newMessages.length > 0){
-      return res.json(newMessages)
-  };
+  const sinceMessage = req.query.sinceMessage;// since=2025-10-24T12:00:00.000Z
+  const sinceReaction = req.query.sinceReaction;
+
+  const newMessages = messages.filter(msg =>
+    (!sinceMessage || new Date(msg.timestamp) > new Date(sinceMessage)) ||
+    (!sinceReaction || new Date(msg.reactionTimestamp) > new Date(sinceReaction))
+  );
+
+  if (newMessages.length > 0) {
+    return res.json(newMessages);
+  }
 
   callbacksForNewMessages.push((messagesToSend) => res.json(messagesToSend));
 
@@ -39,10 +43,11 @@ app.post("/messages", (req, res) => {
     text: text.trim(),
     author: author.trim(),
     timestamp: new Date(),
+    reactionTimestamp: new Date(),
     likes: 0,      
     dislikes: 0    
   };
-
+  
   messages.push(newMessage);
 
   while (callbacksForNewMessages.length > 0) {
@@ -69,6 +74,7 @@ app.post("/messages/:id/react", (req, res) => {
   else if (type === "dislike") msg.dislikes++;
   else return res.status(400).json({ error: "Invalid reaction type" });
 
+  msg.reactionTimestamp = new Date();
   while (callbacksForNewMessages.length > 0) {
     const callback = callbacksForNewMessages.pop();
     callback([msg]); 
@@ -112,11 +118,19 @@ wsServer.on("request", (request) => {
         if (data.reaction === "like") msgToUpdate.likes++;
         else if (data.reaction === "dislike") msgToUpdate.dislikes++;
 
+        msgToUpdate.timestamp = new Date();
+        
+
         wsClients.forEach((client) => {
           if (client.connected) {
             client.sendUTF(JSON.stringify([msgToUpdate]));
           }
         });
+
+         while (callbacksForNewMessages.length > 0) {
+          const callback = callbacksForNewMessages.pop();
+          callback([msgToUpdate]);
+        }
       }
 
         //new message
@@ -126,6 +140,7 @@ wsServer.on("request", (request) => {
           author: data.author.trim(),
           text: data.text.trim(),
           timestamp: new Date(),
+          reactionTimestamp: new Date(),
           likes: 0,      
           dislikes: 0    
         };
