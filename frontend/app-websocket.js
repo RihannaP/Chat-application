@@ -1,30 +1,11 @@
 
-import { formatTime, renderMessages} from "./app-polling.js";
+import {state, renderMessages, wsUrl} from "./app-shared.js";
 
 const chatBox = document.querySelector("#chat-box-websocket");
 const form = document.querySelector("#message-form-websocket");
 const authorInput = document.querySelector("#author-websocket");
 const textInput = document.querySelector("#text-websocket");
 const formMessage = document.querySelector("#form-message-websocket");
-
-
-let wsUrl;
-
-if (
-  window.location.hostname === "localhost" ||
-  window.location.hostname === "127.0.0.1"
-) {
-  wsUrl = "ws://127.0.0.1:3000/";
-  console.log("💻 Running in local mode. Using local backend.");
-} else {
-  wsUrl = "wss://rihannap-chatapp-backend.hosting.codeyourfuture.io/";
-  console.log("☁️ Running in deployed mode. Using live backend.");
-}
-
-
-const state = {
-  messages: []
-};
 
 function log(message) {
   console.log(message);
@@ -42,12 +23,20 @@ function connectWebSocket() {
 
   websocket.addEventListener("message", (e) => {
     try {
-      const messages = JSON.parse(e.data);
-      if (Array.isArray(messages)) {
-        state.messages.push(...messages);
-        renderMessages(chatBox, state.messages);
+      const newRequest = JSON.parse(e.data);
+      if (!Array.isArray(newRequest)) return;
+        newRequest.forEach((msg) => {
+          const existingId = state.messages.findIndex((m) => m.id === msg.id);
+          if(existingId >= 0){
+            Object.assign(state.messages[existingId], msg);
+          } else{
+            state.messages.push(msg);
+          }
+        })
+        
+        renderMessages(chatBox, state.messages, reactMessage);
 
-      }
+      
     } catch (err) {
       console.error("Failed to parse WebSocket message:", err);
     }
@@ -83,5 +72,21 @@ form.addEventListener("submit", (e) => {
   authorInput.value = "";
   formMessage.textContent = "Message sent successfully!";
 });
+
+function reactMessage(messageId, reactionType) {
+  if (!websocket || websocket.readyState !== WebSocket.OPEN) {
+    console.warn("WebSocket not connected for reaction!");
+    return;
+  }
+
+  const payload = {
+    type: "reaction",
+    id: messageId,
+    reaction: reactionType, // "like" or "dislike"
+  };
+
+  websocket.send(JSON.stringify(payload));
+}
+
 
 window.addEventListener("pageshow", connectWebSocket);

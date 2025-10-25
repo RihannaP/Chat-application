@@ -102,8 +102,25 @@ wsServer.on("request", (request) => {
     if (msg.type === "utf8") {
       try {
         const data = JSON.parse(msg.utf8Data);
-        if (!data.text || !data.author) return;
+        if (!data.type && !data.text) return;
 
+         //reaction
+      if (data.type === "reaction" && data.id && data.reaction) {
+        const msgToUpdate = messages.find((m) => m.id === data.id);
+        if (!msgToUpdate) return;
+
+        if (data.reaction === "like") msgToUpdate.likes++;
+        else if (data.reaction === "dislike") msgToUpdate.dislikes++;
+
+        wsClients.forEach((client) => {
+          if (client.connected) {
+            client.sendUTF(JSON.stringify([msgToUpdate]));
+          }
+        });
+      }
+
+        //new message
+      else if (data.text && data.author) {
         const newMessage = {
           id: messages.length + 1,
           author: data.author.trim(),
@@ -126,7 +143,10 @@ wsServer.on("request", (request) => {
         while (callbacksForNewMessages.length > 0) {
           const callback = callbacksForNewMessages.pop();
           callback([newMessage]);
-        }
+        }}
+
+      
+
       } catch (e) {
         console.error("Invalid WebSocket message:", e);
       }
