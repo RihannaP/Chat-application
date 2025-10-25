@@ -69,4 +69,17 @@ function renderMessages(chatBox, messages, reactMessage) {
   chatBox.scrollTop = chatBox.scrollHeight;
 }
 
-export{renderMessages, state, formatTime, backendUrl, wsUrl}
+function mergeMessages(newMessages) {
+  if (!Array.isArray(newMessages) || newMessages.length === 0) return;
+
+  newMessages.forEach((msg) => {
+    const existingId = state.messages.findIndex((m) => m.id === msg.id);
+    if (existingId >= 0) {
+      Object.assign(state.messages[existingId], msg);
+    } else {
+      state.messages.push(msg);
+    }
+  });
+}
+
+export{renderMessages, mergeMessages, state, formatTime, backendUrl, wsUrl}

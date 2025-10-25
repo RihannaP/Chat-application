@@ -1,4 +1,4 @@
-import { renderMessages,state,backendUrl } from "./app-shared.js";
+import { renderMessages,mergeMessages, state,backendUrl } from "./app-shared.js";
 
 
 const chatBox = document.querySelector("#chat-box-polling");
@@ -8,7 +8,6 @@ const textInput = document.querySelector("#text-polling");
 const formMessage = document.querySelector("#form-message-polling");
 
 
-
 async function fetchMessages() {
   try {
     const lastMessageTime = state.messages.length > 0? state.messages[state.messages.length - 1].timestamp : null;
@@ -16,18 +15,9 @@ async function fetchMessages() {
     const response = await fetch(`${backendUrl}${query}`);
     const messages = await response.json();
 
-    if (Array.isArray(messages) && messages.length > 0) {
-      messages.forEach((msg) => {
-        const existingId = state.messages.findIndex(m => m.id === msg.id);
-        if(existingId >=0){
-          Object.assign(state.messages[existingId], msg);
-        }else{
-          state.messages.push(msg);
-        }
-      })
-      
-      renderMessages(chatBox, state.messages, reactMessage);
-    }
+    mergeMessages(messages);
+    renderMessages(chatBox, state.messages, reactMessage);
+    
   } catch (err) {
     console.error("Failed to fetch messages:", err);
   }finally{
@@ -45,14 +35,14 @@ async function reactMessage(messageId, type) {
 
     if (!response.ok) throw new Error("Failed to react");
 
-    // const updatedMsg = await response.json();
+    const updatedMsg = await response.json();
 
-    // const idx = state.messages.findIndex(m => m.id === updatedMsg.id);
-    // if (idx >= 0) {
-    //   state.messages[idx].likes = updatedMsg.likes;
-    //   state.messages[idx].dislikes = updatedMsg.dislikes;
-    //   renderMessages(chatBox, state.messages, reactMessage);
-    // }
+    const idx = state.messages.findIndex(m => m.id === updatedMsg.id);
+    if (idx >= 0) {
+      state.messages[idx].likes = updatedMsg.likes;
+      state.messages[idx].dislikes = updatedMsg.dislikes;
+      renderMessages(chatBox, state.messages, reactMessage);
+    }
 
   } catch (err) {
     console.error("Error reacting to message:", err);

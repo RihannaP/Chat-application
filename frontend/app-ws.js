@@ -1,5 +1,5 @@
 
-import {state, renderMessages, wsUrl} from "./app-shared.js";
+import {state, renderMessages,mergeMessages, wsUrl} from "./app-shared.js";
 
 const chatBox = document.querySelector("#chat-box-websocket");
 const form = document.querySelector("#message-form-websocket");
@@ -7,9 +7,6 @@ const authorInput = document.querySelector("#author-websocket");
 const textInput = document.querySelector("#text-websocket");
 const formMessage = document.querySelector("#form-message-websocket");
 
-function log(message) {
-  console.log(message);
-}
 
 let websocket = null;
 
@@ -18,25 +15,15 @@ function connectWebSocket() {
   console.log("Connecting to WebSocket...");
 
   websocket.addEventListener("open", () => {
-    log("CONNECTED");
+    console.log("CONNECTED");
   });
 
   websocket.addEventListener("message", (e) => {
     try {
-      const newRequest = JSON.parse(e.data);
-      if (!Array.isArray(newRequest)) return;
-        newRequest.forEach((msg) => {
-          const existingId = state.messages.findIndex((m) => m.id === msg.id);
-          if(existingId >= 0){
-            Object.assign(state.messages[existingId], msg);
-          } else{
-            state.messages.push(msg);
-          }
-        })
-        
-        renderMessages(chatBox, state.messages, reactMessage);
+      const messages = JSON.parse(e.data);
+      mergeMessages(messages);
+      renderMessages(chatBox, state.messages, reactMessage);
 
-      
     } catch (err) {
       console.error("Failed to parse WebSocket message:", err);
     }
