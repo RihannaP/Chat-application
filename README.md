@@ -1,6 +1,6 @@
 # 💬 Chat Application  
 
-A simple chat app where users can send and view messages in real time.  
+A real-time chat app where users can send messages, react with likes or dislikes, and see updates instantly through **WebSockets** or **Polling**.
 
 ---
 
@@ -11,23 +11,32 @@ A simple chat app where users can send and view messages in real time.
 
 ---
 
-## ✨ Features  
-- 📝 Send and display chat messages  
-- 🔄 Auto-refresh to show new messages from all users  
+## ✨ Features
+
+- 💬 **Send and receive messages** in real time  
+- 🔄 **Dual communication modes:**  
+  - ⚡ **WebSockets** – Instant updates  
+  - 🌐 **Long Polling** – Reliable fallback using HTTP  
+- 👍👎 **React to messages** with likes and dislikes  
+- ⏰ **Timestamps** for messages and reactions  
+- 🧩 **Shared frontend logic** for both WebSocket and Polling  
+- 🔁 **Automatic reconnection** for WebSocket clients  
 
 ---
 
-## 🧰 Technologies  
-**Backend:** Node.js, Express, CORS  
-**Frontend:** HTML, CSS, JavaScript  
+## 🧰 Technologies
 
----
+### 🖥️ Frontend
+- **HTML5**, **CSS3**, **Vanilla JavaScript (ES Modules)**
+- Modular structure:
+  - `app-polling.js` – Handles long polling updates  
+  - `app-websocket.js` – Handles WebSocket real-time communication  
+  - `app-shared.js` – Shared logic 
 
-## 📡 API Endpoints  
-**GET** `/messages` → Returns all chat messages  
-**POST** `/messages` → Adds a new message  
-```json
-{
-  "author": "Your name",
-  "text": "Your message"
-}
+### ⚙️ Backend
+- **Node.js** + **Express** – REST API and HTTP handling  
+- **CORS** – Cross-origin resource sharing  
+- **WebSocket (websocket npm package)** – Real-time communication  
+- Supports **both HTTP polling** and **WebSocket** connections simultaneously  
+
+
