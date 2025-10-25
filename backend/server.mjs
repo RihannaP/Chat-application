@@ -1,19 +1,21 @@
 
 import express from "express";
 import cors from "cors";
-import { server as WebSocketServer } from "websocket";
-const server = http.createServer(app);
-const webSocketServer = new WebSocketServer({ httpServer: server });
+import http from "http"
+import {server as WebSocketServer } from "websocket";
+import { json } from "stream/consumers";
+
 
 const app = express();
 const port = 3000;
 app.use(express.json());
-
 app.use(cors()); 
 
-let messages = []
-
+let wsClients = [];
+let messages = [];
 const callbacksForNewMessages = []
+
+///////////---- HTTP- Long polling ----///////////
 
 app.get("/messages", (req, res) => {
   const since = req.query.since; // since=2025-10-24T12:00:00.000Z
@@ -27,8 +29,6 @@ app.get("/messages", (req, res) => {
 
 });
 
-
-  
 
 app.post("/messages", (req, res) => {
   const { text, author } = req.body;
@@ -47,11 +47,70 @@ app.post("/messages", (req, res) => {
     const callback = callbacksForNewMessages.pop();
     callback([newMessage]); // always send as array
   }
+
+  wsClients.forEach((client) => {
+    if (client.connected) {
+      client.sendUTF(JSON.stringify([newMessage]));
+    }
+  });
   res.status(201).json(newMessage);
 });
 
+///////////---- WebSocket ----///////////
 
-app.listen(port, () => {
-  console.error(`Chat server listening on port ${port}`);
+
+const server = http.createServer(app);
+const wsServer = new WebSocketServer({ httpServer: server });
+
+wsServer.on("request", (request) => {
+    console.log("Incoming WS request:", request.origin, request.resource);
+  const connection = request.accept(null, request.origin);
+  wsClients.push(connection);
+
+  console.log("WebSocket client connected");
+  connection.sendUTF(JSON.stringify(messages)); 
+
+  connection.on("message", (msg) => {
+    if (msg.type === "utf8") {
+      try {
+        const data = JSON.parse(msg.utf8Data);
+        if (!data.text || !data.author) return;
+
+        const newMessage = {
+          id: messages.length + 1,
+          author: data.author.trim(),
+          text: data.text.trim(),
+          timestamp: new Date(),
+        };
+
+        messages.push(newMessage);
+
+        
+        wsClients.forEach((client) => {
+          if (client.connected) {
+            client.sendUTF(JSON.stringify([newMessage]));
+          }
+        });
+
+        
+        while (callbacksForNewMessages.length > 0) {
+          const callback = callbacksForNewMessages.pop();
+          callback([newMessage]);
+        }
+      } catch (e) {
+        console.error("Invalid WebSocket message:", e);
+      }
+    }
+  });
+
+  connection.on("close", () => {
+    console.log("WebSocket client disconnected");
+    wsClients = wsClients.filter((client) => client !== connection);
+  });
 });
 
+
+
+server.listen(port, () => {
+  console.log(`Chat server running on http://127.0.0.1:${port}`);
+});
