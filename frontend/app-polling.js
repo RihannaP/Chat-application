@@ -47,9 +47,25 @@ export function renderMessages(chatBox, messages) {
     time.classList.add("time");
     time.textContent = formatTime(msg.timestamp);
 
+    const reactions = document.createElement("div");
+    reactions.classList.add("reactions");
+
+    const likeBtn = document.createElement("button");
+    likeBtn.textContent = `👍 ${msg.likes || 0}`;
+    likeBtn.addEventListener("click", () => reactMessage(msg.id, "like"));
+
+    const dislikeBtn = document.createElement("button");
+    dislikeBtn.textContent = `👎 ${msg.dislikes || 0}`;
+    dislikeBtn.addEventListener("click", () => reactMessage(msg.id, "dislike"));
+
+    reactions.appendChild(likeBtn);
+    reactions.appendChild(dislikeBtn);
+
     div.appendChild(author);
     div.appendChild(text);
     div.appendChild(time);
+    div.appendChild(reactions);
+
     chatBox.appendChild(div);
   });
 

@@ -38,7 +38,9 @@ app.post("/messages", (req, res) => {
     id: messages.length + 1,
     text: text.trim(),
     author: author.trim(),
-    timestamp: new Date()
+    timestamp: new Date(),
+    likes: 0,      
+    dislikes: 0    
   };
 
   messages.push(newMessage);
@@ -81,6 +83,8 @@ wsServer.on("request", (request) => {
           author: data.author.trim(),
           text: data.text.trim(),
           timestamp: new Date(),
+          likes: 0,      
+          dislikes: 0    
         };
 
         messages.push(newMessage);
