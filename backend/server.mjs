@@ -58,6 +58,32 @@ app.post("/messages", (req, res) => {
   res.status(201).json(newMessage);
 });
 
+app.post("/messages/:id/react", (req, res) => {
+  const messageId = parseInt(req.params.id);
+  const { type } = req.body; // "like" or "dislike"
+
+  const msg = messages.find(m => m.id === messageId);
+  if (!msg) return res.status(404).json({ error: "Message not found" });
+
+  if (type === "like") msg.likes++;
+  else if (type === "dislike") msg.dislikes++;
+  else return res.status(400).json({ error: "Invalid reaction type" });
+
+  while (callbacksForNewMessages.length > 0) {
+    const callback = callbacksForNewMessages.pop();
+    callback([msg]); 
+  }
+
+  // notify WebSocket clients
+  wsClients.forEach((client) => {
+    if (client.connected) {
+      client.sendUTF(JSON.stringify([msg]));
+    }
+  });
+
+  res.json(msg);
+});
+
 ///////////---- WebSocket ----///////////
 
 
