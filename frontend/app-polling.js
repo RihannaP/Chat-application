@@ -90,6 +90,30 @@ async function fetchMessages() {
   }
 }
 
+async function reactMessage(messageId, type) {
+  try {
+    const response = await fetch(`${backendUrl}/${messageId}/react`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ type }),
+    });
+
+    if (!response.ok) throw new Error("Failed to react");
+
+    const updatedMsg = await response.json();
+
+    const idx = state.messages.findIndex(m => m.id === updatedMsg.id);
+    if (idx >= 0) {
+      state.messages[idx].likes = updatedMsg.likes;
+      state.messages[idx].dislikes = updatedMsg.dislikes;
+      renderMessages(chatBox, state.messages);
+    }
+
+  } catch (err) {
+    console.error("Error reacting to message:", err);
+  }
+}
+
 
 form.addEventListener("submit", async (e) => {
   e.preventDefault();
